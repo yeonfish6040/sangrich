@@ -4,12 +4,38 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: white;
-  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-  overflow-x: hidden;
-}
-
 html {
   scroll-behavior: smooth;
+  overscroll-behavior: none;
+}
+
+body {
+  background-color: white;
+  font-family: var(--font-nanum-gothic), 'Apple SD Gothic Neo', Arial, sans-serif;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+/* Scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f3f4f6;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 6px;
+  border: 3px solid #f3f4f6;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
 }

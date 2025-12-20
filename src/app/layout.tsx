@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nanum_Gothic, Nanum_Pen_Script, Nanum_Myeongjo } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import SideMenu from "@/components/SideMenu";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nanumGothic = Nanum_Gothic({
+  weight: ['400', '700', '800'],
   subsets: ["latin"],
+  variable: "--font-nanum-gothic",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const nanumPen = Nanum_Pen_Script({
+  weight: ['400'],
   subsets: ["latin"],
+  variable: "--font-nanum-pen",
+});
+
+const nanumMyeongjo = Nanum_Myeongjo({
+  weight: ['400', '700', '800'],
+  subsets: ["latin"],
+  variable: "--font-nanum-myeongjo",
 });
 
 export const metadata: Metadata = {
@@ -26,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${nanumGothic.variable} ${nanumPen.variable} ${nanumMyeongjo.variable} antialiased`}
       >
         {children}
         <Footer />

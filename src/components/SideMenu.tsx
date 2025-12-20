@@ -50,7 +50,7 @@ export default function SideMenu() {
   const items: NavItem[] = SUB_NAV_BY_MAIN[mainHref] ?? [];
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex">
       <aside className="w-3/4 max-w-[220px] bg-white">
       {/* Header */}
       <div className="bg-[#28648E] px-4 py-4 text-center">

@@ -22,6 +22,7 @@ export const SUB_NAV_BY_MAIN: Record<string, { label: string; href: string }[]> 
     { label: "찬양대 및 교회학교", href: "/about/choir-school" },
     { label: "선교대 및 속회", href: "/about/mission-group" },
     { label: "선교 및 봉사", href: "/about/mission-service" },
+    { label: "오시는길", href: "/about/directions" },
   ],
   "/worship": [
     { label: "예배안내", href: "/worship" },
@@ -100,7 +101,7 @@ export default function Header() {
                 <span className="sr-only">상리교회</span>
               </Link>
 
-              <nav className="hidden items-center gap-10 text-2xl font-bold md:flex">
+              <nav className="hidden items-center gap-10 text-xl font-bold md:flex">
               {MAIN_NAV.map((item) => (
                 <Link
                   key={item.href}
@@ -115,6 +116,7 @@ export default function Header() {
                 </Link>
               ))}
               </nav>
+              <div className={"spacer"}>&nbsp;</div>
             </div>
 
             {/* Mobile menu placeholder */}

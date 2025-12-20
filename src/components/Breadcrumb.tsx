@@ -20,6 +20,7 @@ const SUB_TITLE_BY_HREF: Record<string, string> = {
   "/about/choir-school": "찬양대 및 교회학교",
   "/about/mission-group": "선교대 및 속회",
   "/about/mission-service": "선교 및 봉사",
+  "/about/directions": "오시는길",
   "/worship": "예배안내",
   "/worship/weekly": "주보모음",
   "/sunday-video": "주일설교 영상",

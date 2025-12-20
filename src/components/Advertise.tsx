@@ -56,8 +56,6 @@ export default function Advertise({ category, menuHrefs }: Props) {
             className="object-cover"
           />
         </div>
-
-        <div className="absolute left-0 h-0.5 w-full bg-[#579f98]" />
       </div>
     </div>
   );
