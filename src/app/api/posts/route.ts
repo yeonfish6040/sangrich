@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/lib/mongodb';
+import Post from '@/models/Post';
+
+export async function POST(request: NextRequest) {
+  try {
+    await dbConnect();
+    const body = await request.json();
+    const post = await Post.create(body);
+    return NextResponse.json({ success: true, data: post });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: String(error) }, { status: 400 });
+  }
+}
+
+export async function GET() {
+  try {
+    await dbConnect();
+    const posts = await Post.find().sort({ createdAt: -1 });
+    return NextResponse.json({ success: true, data: posts });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: String(error) }, { status: 400 });
+  }
+}

@@ -238,7 +238,7 @@ export default function Footer() {
         </div>
 
         {/* Address */}
-        <p className="mt-8 md:mt-10 w-full text-center text-[13px] leading-[1.6] text-[#CECECE]">
+        <p className="mt-4 md:mt-4 w-full text-center text-[13px] leading-[1.6] text-[#CECECE]">
           (18305) 경기도 화성시 봉담읍 상리2길 114  TEL : 031-227-1477
         </p>
 

@@ -44,7 +44,6 @@ export const SUB_NAV_BY_MAIN: Record<string, { label: string; href: string }[]> 
     { label: "교회일정", href: "/news/schedule" },
     { label: "교회앨범", href: "/news/album" },
     { label: "교우사업터", href: "/news/business" },
-    { label: "신앙정보공유 터", href: "/news/worship-share" },
   ],
 };
 

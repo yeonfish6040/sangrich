@@ -1,9 +1,7 @@
-"use client"
-
 import Header from "@/components/Header";
-// import Menu from "@/components/SideMenu";
 import Advertise from "@/components/Advertise";
 import Wrapper from "@/components/Wrapper";
+import KakaoScript from "@/components/KakaoScript";
 
 export default function MainLayout({
                                      children,
@@ -12,6 +10,7 @@ export default function MainLayout({
 }>) {
   return (
     <>
+      <KakaoScript />
       <Header />
       <Advertise />
       <Wrapper>

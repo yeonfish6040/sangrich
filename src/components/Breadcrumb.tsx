@@ -23,7 +23,7 @@ const SUB_TITLE_BY_HREF: Record<string, string> = {
   "/about/directions": "오시는길",
   "/worship": "예배안내",
   "/worship/weekly": "주보모음",
-  "/sunday-video": "주일설교 영상",
+  "/word/sunday-video": "주일설교 영상",
   "/word/column": "담임목사님 컬럼",
   "/school/kids-elementary": "유·초등부",
   "/school/youth": "청소년부",

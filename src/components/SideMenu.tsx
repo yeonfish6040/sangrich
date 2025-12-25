@@ -63,7 +63,7 @@ export default function SideMenu() {
       <nav aria-label={title} className="border-t border-slate-200">
         <ul className="divide-y divide-slate-200">
           {items.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href
             return (
               <li key={item.href}>
                 <Link
