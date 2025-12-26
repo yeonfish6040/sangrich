@@ -7,6 +7,9 @@ import Album from '@/models/Album';
 import ChurchAlbum from '@/models/ChurchAlbum';
 import Event from '@/models/Event';
 import Business from '@/models/Business';
+import ChurchNews from '@/models/ChurchNews';
+import FaithInfo from '@/models/FaithInfo';
+import NewComer from '@/models/NewComer';
 
 export default async function AdminDashboard() {
   await dbConnect();
@@ -20,6 +23,9 @@ export default async function AdminDashboard() {
     churchAlbumsCount,
     eventsCount,
     businessesCount,
+    churchNewsCount,
+    faithInfoCount,
+    newcomersCount,
   ] = await Promise.all([
     Post.countDocuments(),
     Sermon.countDocuments(),
@@ -28,6 +34,9 @@ export default async function AdminDashboard() {
     ChurchAlbum.countDocuments(),
     Event.countDocuments(),
     Business.countDocuments(),
+    ChurchNews.countDocuments(),
+    FaithInfo.countDocuments(),
+    NewComer.countDocuments(),
   ]);
 
   const menuItems = [
@@ -79,6 +88,27 @@ export default async function AdminDashboard() {
       href: '/admin/businesses',
       count: businessesCount,
       color: 'bg-indigo-500',
+    },
+    {
+      title: '교회 소식',
+      description: '교회 행사 소식 관리',
+      href: '/admin/church-news',
+      count: churchNewsCount,
+      color: 'bg-pink-500',
+    },
+    {
+      title: '신앙정보 공유 터',
+      description: '신앙 관련 정보 관리',
+      href: '/admin/faith-info',
+      count: faithInfoCount,
+      color: 'bg-teal-500',
+    },
+    {
+      title: '새신자 소개',
+      description: '새가족 소개 관리',
+      href: '/admin/newcomers',
+      count: newcomersCount,
+      color: 'bg-cyan-500',
     },
   ];
 
@@ -142,7 +172,7 @@ export default async function AdminDashboard() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">
-                {postsCount + sermonsCount + columnsCount}
+                {postsCount + sermonsCount + columnsCount + churchNewsCount + faithInfoCount}
               </div>
               <div className="text-sm text-gray-600">게시글</div>
             </div>
@@ -163,6 +193,12 @@ export default async function AdminDashboard() {
                 {businessesCount}
               </div>
               <div className="text-sm text-gray-600">사업체</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-cyan-600">
+                {newcomersCount}
+              </div>
+              <div className="text-sm text-gray-600">새신자</div>
             </div>
           </div>
         </div>

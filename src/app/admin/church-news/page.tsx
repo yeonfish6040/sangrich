@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 async function getChurchNews() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/church-news?limit=100`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/church-news?limit=100`, {
     cache: 'no-store',
   });
   if (!res.ok) return [];
@@ -16,7 +16,15 @@ export default async function AdminChurchNewsPage() {
     <div className="min-h-screen bg-gray-100">
       <div className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-6 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">교회 소식 관리</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-gray-900">교회 소식 관리</h1>
+            <Link
+              href="/admin"
+              className="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+            >
+              관리자 메인
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
 
 async function getFaithInfo(id: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/faith-info/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/faith-info/${id}`, {
     cache: 'no-store',
   });
   if (!res.ok) return null;

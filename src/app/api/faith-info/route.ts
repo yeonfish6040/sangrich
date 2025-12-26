@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
     const faithInfos = await FaithInfo.find(query)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
     return NextResponse.json({
       success: true,

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 async function getNewComers(page: number) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/newcomers?page=${page}&limit=12`,
+    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/newcomers?page=${page}&limit=12`,
     { cache: 'no-store' }
   );
   if (!res.ok) return { data: [], pagination: { page: 1, limit: 12, total: 0, totalPages: 0 } };

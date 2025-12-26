@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 async function getChurchNews(page: number, search: string) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/church-news?page=${page}&limit=15&search=${search}`,
+    `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/church-news?page=${page}&limit=15&search=${search}`,
     { cache: 'no-store' }
   );
   if (!res.ok) return { data: [], pagination: { page: 1, limit: 15, total: 0, totalPages: 0 } };
