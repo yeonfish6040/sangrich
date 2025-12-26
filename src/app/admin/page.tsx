@@ -10,6 +10,7 @@ import Business from '@/models/Business';
 import ChurchNews from '@/models/ChurchNews';
 import FaithInfo from '@/models/FaithInfo';
 import NewComer from '@/models/NewComer';
+import AdminLogout from '@/components/AdminLogout';
 
 // 동적 렌더링 강제 (빌드 시 정적 생성 방지)
 export const dynamic = 'force-dynamic';
@@ -122,12 +123,15 @@ export default async function AdminDashboard() {
         <div className="mx-auto max-w-7xl px-6 py-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">관리자 페이지</h1>
-            <Link
-              href="/"
-              className="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
-            >
-              메인으로
-            </Link>
+            <div className="flex gap-3">
+              <Link
+                href="/"
+                className="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+              >
+                메인으로
+              </Link>
+              <AdminLogout />
+            </div>
           </div>
         </div>
       </div>

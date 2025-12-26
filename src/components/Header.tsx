@@ -62,25 +62,6 @@ export default function Header() {
 
   return (
     <header className="w-full bg-white">
-      {/* Top utility bar */}
-      <div className="border-b border-gray-100">
-        <div className="w-full px-8">
-          <div className="flex h-10 items-center justify-end gap-6 text-xs text-gray-600">
-            <Link href="/login" className="flex items-center gap-2 hover:text-gray-900">
-              <span aria-hidden className="inline-block">🔒</span>
-              <span>LOGIN</span>
-            </Link>
-            <Link href="/join" className="flex items-center gap-2 hover:text-gray-900">
-              <span aria-hidden className="inline-block">🟢</span>
-              <span>JOIN</span>
-            </Link>
-            <Link href="/sitemap" className="flex items-center gap-2 hover:text-gray-900">
-              <span aria-hidden className="inline-block">🧭</span>
-              <span>SITEMAP</span>
-            </Link>
-          </div>
-        </div>
-      </div>
 
       {/* Main nav row */}
       <div className="border-b border-gray-100">
