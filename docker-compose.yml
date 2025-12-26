@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # MongoDB 서비스
+  mongodb:
+    image: mongo:7.0
+    container_name: sangrich-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: sangrich123
+      MONGO_INITDB_DATABASE: sangrich
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - sangrich-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js 애플리케이션 (프로덕션 모드)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sangrich-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://admin:sangrich123@mongodb:27017/sangrich?authSource=admin
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - sangrich-network
+
+  # 개발용 Next.js (선택사항 - 프로덕션 빌드 대신 사용)
+  app-dev:
+    image: node:20-alpine
+    container_name: sangrich-app-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://admin:sangrich123@mongodb:27017/sangrich?authSource=admin
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - sangrich-network
+    profiles:
+      - dev
+
+networks:
+  sangrich-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
