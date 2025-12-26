@@ -11,6 +11,9 @@ import ChurchNews from '@/models/ChurchNews';
 import FaithInfo from '@/models/FaithInfo';
 import NewComer from '@/models/NewComer';
 
+// 동적 렌더링 강제 (빌드 시 정적 생성 방지)
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   await dbConnect();
 
