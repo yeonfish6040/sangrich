@@ -11,7 +11,9 @@ export const sessionOptions: SessionOptions = {
   password: process.env.SESSION_SECRET || 'complex_password_at_least_32_characters_long_for_security',
   cookieName: 'admin_session',
   cookieOptions: {
-    secure: process.env.NODE_ENV === 'production',
+    // HTTPS를 사용하는 경우에만 secure: true 설정
+    // Docker HTTP 환경에서는 COOKIE_SECURE=false로 설정
+    secure: process.env.COOKIE_SECURE === 'true',
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 60 * 60 * 24, // 24시간

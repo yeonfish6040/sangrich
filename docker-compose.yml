@@ -37,6 +37,7 @@ services:
       - PORT=3000
       - MONGODB_URI=mongodb://admin:sangrich123@mongodb:27017/sangrich?authSource=admin
       - NEXT_PUBLIC_API_URL=http://localhost:3000
+      - COOKIE_SECURE=false
     depends_on:
       mongodb:
         condition: service_healthy
