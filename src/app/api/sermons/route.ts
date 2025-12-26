@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Sermon from '@/models/Sermon';
+import { requireAuthAPI } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
+    // 인증 확인
+    const authResult = await requireAuthAPI();
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     await dbConnect();
     const body = await request.json();
     const sermon = await Sermon.create(body);
