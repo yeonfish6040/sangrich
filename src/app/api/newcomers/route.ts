@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import NewComer from '@/models/NewComer';
+import { requireAuthAPI } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -30,6 +31,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // 인증 확인
+    const authResult = await requireAuthAPI();
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     await dbConnect();
     const body = await request.json();
     const newcomer = await NewComer.create(body);

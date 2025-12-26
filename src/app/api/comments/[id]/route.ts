@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Comment from '@/models/Comment';
+import { requireAuthAPI } from '@/lib/auth';
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    // 인증 확인
+    const authResult = await requireAuthAPI();
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     await dbConnect();
     const { id } = await params;
     const comment = await Comment.findByIdAndDelete(id);
@@ -16,6 +23,12 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    // 인증 확인
+    const authResult = await requireAuthAPI();
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     await dbConnect();
     const { id } = await params;
     const body = await request.json();

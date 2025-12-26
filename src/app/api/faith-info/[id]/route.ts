@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import FaithInfo from '@/models/FaithInfo';
+import { requireAuthAPI } from '@/lib/auth';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -21,6 +22,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    // 인증 확인
+    const authResult = await requireAuthAPI();
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     await dbConnect();
     const { id } = await params;
     const body = await request.json();
@@ -34,6 +41,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    // 인증 확인
+    const authResult = await requireAuthAPI();
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     await dbConnect();
     const { id } = await params;
     const faithInfo = await FaithInfo.findByIdAndDelete(id);
