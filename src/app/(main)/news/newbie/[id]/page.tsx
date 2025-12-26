@@ -69,7 +69,7 @@ export default async function NewComerDetailPage({ params }: PageProps) {
         {/* 이미지 갤러리 */}
         {newcomer.images && newcomer.images.length > 0 ? (
           <div className="mb-8 space-y-6">
-            {newcomer.images.map((imageBase64, index) => (
+            {newcomer.images.map((imageBase64: string, index: number) => (
               <div key={index} className="relative w-full">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img

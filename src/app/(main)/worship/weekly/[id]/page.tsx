@@ -57,7 +57,7 @@ export default async function WeeklyDetailPage({ params }: PageProps) {
       {/* Image gallery - display all bulletin images (base64) */}
       {post.images && post.images.length > 0 ? (
         <div className="space-y-6">
-          {post.images.map((imageBase64, index) => (
+          {post.images.map((imageBase64: string, index: number) => (
             <div key={index} className="relative w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

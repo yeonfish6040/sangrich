@@ -55,7 +55,7 @@ export default async function ChurchAlbumDetailPage({ params }: PageProps) {
       {/* Image gallery */}
       {album.images && album.images.length > 0 ? (
         <div className="mb-8 space-y-6">
-          {album.images.map((imageBase64, index) => (
+          {album.images.map((imageBase64: string, index: number) => (
             <div key={index} className="relative w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
