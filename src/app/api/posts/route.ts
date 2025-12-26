@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
+import { requireAuthAPI } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
+  // 인증 확인
+  const authResult = await requireAuthAPI();
+  if (authResult instanceof NextResponse) {
+    return authResult; // 401 응답
+  }
+
   try {
     await dbConnect();
     const body = await request.json();

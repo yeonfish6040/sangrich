@@ -11,11 +11,15 @@ import ChurchNews from '@/models/ChurchNews';
 import FaithInfo from '@/models/FaithInfo';
 import NewComer from '@/models/NewComer';
 import AdminLogout from '@/components/AdminLogout';
+import { requireAuth } from '@/lib/auth';
 
 // 동적 렌더링 강제 (빌드 시 정적 생성 방지)
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
+  // 세션 검증
+  await requireAuth();
+
   await dbConnect();
 
   // Get counts for each content type

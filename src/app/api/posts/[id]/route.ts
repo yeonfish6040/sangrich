@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
+import { requireAuthAPI } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
@@ -23,6 +24,12 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // 인증 확인
+  const authResult = await requireAuthAPI();
+  if (authResult instanceof NextResponse) {
+    return authResult;
+  }
+
   try {
     await dbConnect();
     const { id } = await params;
@@ -41,6 +48,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // 인증 확인
+  const authResult = await requireAuthAPI();
+  if (authResult instanceof NextResponse) {
+    return authResult;
+  }
+
   try {
     await dbConnect();
     const { id } = await params;
