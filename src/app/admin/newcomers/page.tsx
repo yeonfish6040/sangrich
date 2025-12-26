@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { requireAuth } from '@/lib/auth';
 
 async function getNewComers() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/newcomers?limit=100`, {
@@ -10,6 +11,7 @@ async function getNewComers() {
 }
 
 export default async function AdminNewComersPage() {
+  await requireAuth();
   const newcomers = await getNewComers();
 
   return (

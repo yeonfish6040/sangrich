@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import dbConnect from '@/lib/mongodb';
 import Post from '@/models/Post';
+import { requireAuth } from '@/lib/auth';
 
 export default async function AdminPostsPage() {
+  await requireAuth();
   await dbConnect();
 
   const posts = await Post.find().sort({ createdAt: -1 }).lean();

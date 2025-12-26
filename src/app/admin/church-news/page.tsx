@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { requireAuth } from '@/lib/auth';
 
 async function getChurchNews() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/church-news?limit=100`, {
@@ -10,6 +11,7 @@ async function getChurchNews() {
 }
 
 export default async function AdminChurchNewsPage() {
+  await requireAuth();
   const newsList = await getChurchNews();
 
   return (

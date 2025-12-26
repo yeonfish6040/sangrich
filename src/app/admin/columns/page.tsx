@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import dbConnect from '@/lib/mongodb';
 import Column from '@/models/Column';
+import { requireAuth } from '@/lib/auth';
 
 export default async function AdminColumnsPage() {
+  await requireAuth();
   await dbConnect();
   const columns = await Column.find().sort({ createdAt: -1 }).lean();
 

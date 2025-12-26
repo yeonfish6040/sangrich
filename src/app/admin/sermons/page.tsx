@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import dbConnect from '@/lib/mongodb';
 import Sermon from '@/models/Sermon';
+import { requireAuth } from '@/lib/auth';
 
 export default async function AdminSermonsPage() {
+  await requireAuth();
   await dbConnect();
   const sermons = await Sermon.find().sort({ sermonDate: -1 }).lean();
 

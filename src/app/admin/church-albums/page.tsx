@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import dbConnect from '@/lib/mongodb';
 import ChurchAlbum from '@/models/ChurchAlbum';
+import { requireAuth } from '@/lib/auth';
 
 export default async function AdminChurchAlbumsPage() {
+  await requireAuth();
   await dbConnect();
   const albums = await ChurchAlbum.find().sort({ createdAt: -1 }).lean();
 

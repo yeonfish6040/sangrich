@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import dbConnect from '@/lib/mongodb';
 import Business from '@/models/Business';
+import { requireAuth } from '@/lib/auth';
 
 export default async function AdminBusinessesPage() {
+  await requireAuth();
   await dbConnect();
   const businesses = await Business.find().sort({ category: 1, businessName: 1 }).lean();
 

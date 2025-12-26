@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import dbConnect from '@/lib/mongodb';
 import Event from '@/models/Event';
+import { requireAuth } from '@/lib/auth';
 
 export default async function AdminEventsPage() {
+  await requireAuth();
   await dbConnect();
   const events = await Event.find().sort({ date: -1 }).lean();
 

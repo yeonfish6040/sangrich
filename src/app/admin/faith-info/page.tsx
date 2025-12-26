@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { requireAuth } from '@/lib/auth';
 
 async function getFaithInfos() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/faith-info?limit=100`, {
@@ -10,6 +11,7 @@ async function getFaithInfos() {
 }
 
 export default async function AdminFaithInfoPage() {
+  await requireAuth();
   const faithInfos = await getFaithInfos();
 
   return (
