@@ -20,7 +20,7 @@ const bottomMenus = [
   { label: "교회앨범", href: "/news/album", icon: "/bottom/album.png" },
   { label: "섬기는 이", href: "/about/servants", icon: "/bottom/staff.png" },
   { label: "오시는길", href: "/about/directions", icon: "/bottom/location.png" },
-  { label: "교회소식", href: "/news", icon: "/bottom/news.png" },
+  // { label: "교회소식", href: "/news", icon: "/bottom/news.png" },
 ];
 
 function MenuCard({
@@ -80,7 +80,7 @@ function BottomCircleMenu() {
               >
                 <div
                   className={
-                    "aspect-square w-24 sm:w-28 md:w-32 rounded-full bg-white/70 " +
+                    "aspect-square w-[clamp(4.5rem,10vw,8rem)] rounded-full bg-white/70 " +
                     "backdrop-blur shadow-sm flex flex-col items-center justify-center gap-2 px-2"
                   }
                 >
@@ -90,7 +90,7 @@ function BottomCircleMenu() {
                     width={0}
                     height={0}
                     sizes="10vw"
-                    className={"h-auto w-1/2 object-contain"}
+                    className={"h-auto w-[45%] object-contain"}
                   />
                   <div className={"text-sm font-semibold text-black/80 text-center leading-tight"}>
                     {m.label}
@@ -128,7 +128,7 @@ export default function Home() {
             <Image src={"/intro.png"} alt={"인트로"} height={100} width={100} priority className={"h-1/2 w-auto"} />
           </div>
 
-          <div className={"right relative h-full w-3/7 flex items-start justify-end pr-6 pt-14"}>
+          <div className={"right relative h-full w-5/7 flex items-start justify-end pr-6 pt-14"}>
             <div className={"grid w-full grid-cols-3 auto-rows-fr gap-4 sm:gap-5 lg:gap-6"}>
               {/* Row 1: 3 cards */}
               <MenuCard card={menuCards[0]} className="col-start-1" />
@@ -144,7 +144,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className={"relative z-20"}>
+        <div className={"relative z-20 mt-1/3"}>
           <BottomCircleMenu />
         </div>
       </div>
