@@ -147,7 +147,7 @@ export default async function AdminDashboard() {
     {
       title: '앨범 게시판 1',
       description: '추가 앨범 게시판',
-      href: '#',
+      href: '/admin/album-extra1',
       count: albumExtra1Count,
       color: 'bg-lime-500',
       permission: BOARD_PERMISSIONS.ALBUM_EXTRA1,
@@ -155,7 +155,7 @@ export default async function AdminDashboard() {
     {
       title: '앨범 게시판 2',
       description: '추가 앨범 게시판',
-      href: '#',
+      href: '/admin/album-extra2',
       count: albumExtra2Count,
       color: 'bg-emerald-500',
       permission: BOARD_PERMISSIONS.ALBUM_EXTRA2,
@@ -163,7 +163,7 @@ export default async function AdminDashboard() {
     {
       title: '게시판 1',
       description: '추가 일반 게시판',
-      href: '#',
+      href: '/admin/board-extra1',
       count: boardExtra1Count,
       color: 'bg-violet-500',
       permission: BOARD_PERMISSIONS.BOARD_EXTRA1,
@@ -171,7 +171,7 @@ export default async function AdminDashboard() {
     {
       title: '게시판 2',
       description: '추가 일반 게시판',
-      href: '#',
+      href: '/admin/board-extra2',
       count: boardExtra2Count,
       color: 'bg-fuchsia-500',
       permission: BOARD_PERMISSIONS.BOARD_EXTRA2,

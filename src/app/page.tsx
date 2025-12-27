@@ -14,12 +14,12 @@ const menuCards = [
 ];
 
 const bottomMenus = [
-  { label: "인사말", href: "/greeting", icon: "/bottom/greeting.png" },
-  { label: "선교 및 봉사", href: "/mission", icon: "/bottom/mission.png" },
-  { label: "생명말씀", href: "/life-word", icon: "/bottom/life-word.png" },
-  { label: "교회앨범", href: "/album", icon: "/bottom/album.png" },
-  { label: "섬기는 이", href: "/staff", icon: "/bottom/staff.png" },
-  { label: "오시는길", href: "/location", icon: "/bottom/location.png" },
+  { label: "인사말", href: "/about/greeting", icon: "/bottom/greeting.png" },
+  { label: "선교 및 봉사", href: "/about/mission-service", icon: "/bottom/mission.png" },
+  { label: "생명말씀", href: "/word", icon: "/bottom/life-word.png" },
+  { label: "교회앨범", href: "/news/album", icon: "/bottom/album.png" },
+  { label: "섬기는 이", href: "/about/servants", icon: "/bottom/staff.png" },
+  { label: "오시는길", href: "/about/directions", icon: "/bottom/location.png" },
   { label: "교회소식", href: "/news", icon: "/bottom/news.png" },
 ];
 
@@ -63,14 +63,13 @@ function BottomCircleMenu() {
       {/* background */}
       <div
         className={
-          "w-full rounded-xl"
+          "w-full rounded-xl overflow-visible"
         }
       >
         <div className={"w-full px-6 py-8"}>
           <div
             className={
-              "mx-auto flex items-center justify-between gap-6 " +
-              "overflow-x-auto scrollbar-hide"
+              "mx-auto flex flex-wrap items-center justify-center gap-8 px-6"
             }
           >
             {bottomMenus.map((m) => (
@@ -81,7 +80,7 @@ function BottomCircleMenu() {
               >
                 <div
                   className={
-                    "aspect-square w-32 rounded-full bg-white/70 " +
+                    "aspect-square w-24 sm:w-28 md:w-32 rounded-full bg-white/70 " +
                     "backdrop-blur shadow-sm flex flex-col items-center justify-center gap-2 px-2"
                   }
                 >
@@ -145,7 +144,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className={"relative z-20 w-4/5 mx-auto mt-8 pb-10"}>
+        <div className={"relative z-20"}>
           <BottomCircleMenu />
         </div>
       </div>
