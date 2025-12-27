@@ -1,15 +1,49 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import dbConnect from '@/lib/mongodb';
-import Sermon from '@/models/Sermon';
-import { requireAuth } from '@/lib/auth';
 
-export default async function AdminSermonsPage() {
-  const session = await requireAuth();
-  await dbConnect();
+export default function AdminSermonsPage() {
+  const [sermons, setSermons] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // admin은 모든 글, user는 자기가 쓴 글만
-  const query = session.role === 'admin' ? {} : { createdBy: session.username };
-  const sermons = await Sermon.find(query).sort({ sermonDate: -1 }).lean();
+  useEffect(() => {
+    fetchSermons();
+  }, []);
+
+  const fetchSermons = async () => {
+    try {
+      const res = await fetch('/api/sermons');
+      const data = await res.json();
+      if (data.success) {
+        setSermons(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch sermons:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+
+    try {
+      const res = await fetch(`/api/sermons/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('삭제되었습니다.');
+        fetchSermons();
+      } else {
+        alert('삭제 실패');
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다.');
+    }
+  };
+
+  if (loading) {
+    return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -60,7 +94,12 @@ export default async function AdminSermonsPage() {
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{sermon.viewCount}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                       <Link href={`/admin/sermons/${sermon._id.toString()}`} className="mr-3 text-blue-600 hover:text-blue-900">수정</Link>
-                      <button className="text-red-600 hover:text-red-900">삭제</button>
+                      <button
+                        onClick={() => handleDelete(sermon._id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        삭제
+                      </button>
                     </td>
                   </tr>
                 ))

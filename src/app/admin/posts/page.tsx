@@ -1,15 +1,49 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import dbConnect from '@/lib/mongodb';
-import Post from '@/models/Post';
-import { requireAuth } from '@/lib/auth';
 
-export default async function AdminPostsPage() {
-  const session = await requireAuth();
-  await dbConnect();
+export default function AdminPostsPage() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // admin은 모든 글, user는 자기가 쓴 글만
-  const query = session.role === 'admin' ? {} : { createdBy: session.username };
-  const posts = await Post.find(query).sort({ createdAt: -1 }).lean();
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch('/api/posts');
+      const data = await res.json();
+      if (data.success) {
+        setPosts(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+
+    try {
+      const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('삭제되었습니다.');
+        fetchPosts();
+      } else {
+        alert('삭제 실패');
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다.');
+    }
+  };
+
+  if (loading) {
+    return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -95,12 +129,15 @@ export default async function AdminPostsPage() {
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                       <Link
-                        href={`/admin/posts/${post._id.toString()}`}
+                        href={`/admin/posts/${post._id}`}
                         className="mr-3 text-blue-600 hover:text-blue-900"
                       >
                         수정
                       </Link>
-                      <button className="text-red-600 hover:text-red-900">
+                      <button
+                        onClick={() => handleDelete(post._id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
                         삭제
                       </button>
                     </td>

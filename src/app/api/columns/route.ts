@@ -3,6 +3,16 @@ import dbConnect from '@/lib/mongodb';
 import Column from '@/models/Column';
 import { requireAuthAPI } from '@/lib/auth';
 
+export async function GET() {
+  try {
+    await dbConnect();
+    const columns = await Column.find().sort({ createdAt: -1 });
+    return NextResponse.json({ success: true, data: columns });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: String(error) }, { status: 400 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 인증 확인

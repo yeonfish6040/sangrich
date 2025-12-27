@@ -1,12 +1,49 @@
-import Link from 'next/link';
-import dbConnect from '@/lib/mongodb';
-import Album from '@/models/Album';
-import { requireAuth } from '@/lib/auth';
+'use client';
 
-export default async function AdminAlbumsPage() {
-  await requireAuth();
-  await dbConnect();
-  const albums = await Album.find().sort({ createdAt: -1 }).lean();
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+export default function AdminAlbumsPage() {
+  const [albums, setAlbums] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAlbums();
+  }, []);
+
+  const fetchAlbums = async () => {
+    try {
+      const res = await fetch('/api/albums');
+      const data = await res.json();
+      if (data.success) {
+        setAlbums(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch albums:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+
+    try {
+      const res = await fetch(`/api/albums/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert('삭제되었습니다.');
+        fetchAlbums();
+      } else {
+        alert('삭제 실패');
+      }
+    } catch (error) {
+      alert('오류가 발생했습니다.');
+    }
+  };
+
+  if (loading) {
+    return <div className="flex min-h-screen items-center justify-center">로딩 중...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -47,7 +84,7 @@ export default async function AdminAlbumsPage() {
                 <tr><td colSpan={6} className="py-10 text-center text-gray-500">등록된 앨범이 없습니다.</td></tr>
               ) : (
                 albums.map((album) => (
-                  <tr key={album._id.toString()} className="hover:bg-gray-50">
+                  <tr key={album._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 text-sm text-gray-900">{album.title}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{album.author}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{album.images?.length || 0}장</td>
@@ -56,8 +93,13 @@ export default async function AdminAlbumsPage() {
                       {new Date(album.createdAt).toLocaleDateString('ko-KR')}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                      <Link href={`/admin/albums/${album._id.toString()}`} className="mr-3 text-blue-600 hover:text-blue-900">수정</Link>
-                      <button className="text-red-600 hover:text-red-900">삭제</button>
+                      <Link href={`/admin/albums/${album._id}`} className="mr-3 text-blue-600 hover:text-blue-900">수정</Link>
+                      <button
+                        onClick={() => handleDelete(album._id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        삭제
+                      </button>
                     </td>
                   </tr>
                 ))

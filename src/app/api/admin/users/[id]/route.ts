@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs';
 // 특정 사용자 조회 (admin만 가능)
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await requireAdminAPI();
   if (authResult instanceof NextResponse) {
@@ -16,7 +16,8 @@ export async function GET(
 
   try {
     await dbConnect();
-    const user = await User.findById(params.id).select('-password');
+    const { id } = await params;
+    const user = await User.findById(id).select('-password');
 
     if (!user) {
       return NextResponse.json(
@@ -34,7 +35,7 @@ export async function GET(
 // 사용자 정보 수정 (admin만 가능)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await requireAdminAPI();
   if (authResult instanceof NextResponse) {
@@ -43,6 +44,7 @@ export async function PUT(
 
   try {
     await dbConnect();
+    const { id } = await params;
     const body = await request.json();
     const { username, password, displayName, role, permissions } = body;
 
@@ -58,7 +60,7 @@ export async function PUT(
     }
 
     const user = await User.findByIdAndUpdate(
-      params.id,
+      id,
       updateData,
       { new: true, runValidators: true }
     ).select('-password');
@@ -70,7 +72,12 @@ export async function PUT(
       );
     }
 
-    return NextResponse.json({ success: true, data: user });
+    return NextResponse.json({
+      success: true,
+      data: user,
+      // 본인 계정을 수정한 경우 알림
+      needsReload: authResult.username === user.username
+    });
   } catch (error) {
     return NextResponse.json({ success: false, error: String(error) }, { status: 400 });
   }
@@ -79,7 +86,7 @@ export async function PUT(
 // 사용자 삭제 (admin만 가능)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const authResult = await requireAdminAPI();
   if (authResult instanceof NextResponse) {
@@ -88,7 +95,8 @@ export async function DELETE(
 
   try {
     await dbConnect();
-    const user = await User.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const user = await User.findByIdAndDelete(id);
 
     if (!user) {
       return NextResponse.json(

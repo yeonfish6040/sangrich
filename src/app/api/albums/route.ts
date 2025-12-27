@@ -3,6 +3,16 @@ import dbConnect from '@/lib/mongodb';
 import Album from '@/models/Album';
 import { requireAuthAPI } from '@/lib/auth';
 
+export async function GET() {
+  try {
+    await dbConnect();
+    const albums = await Album.find().sort({ createdAt: -1 });
+    return NextResponse.json({ success: true, data: albums });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: String(error) }, { status: 400 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 인증 확인

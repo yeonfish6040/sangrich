@@ -138,6 +138,13 @@ export default function AdminUsersPage() {
           alert('사용자가 수정되었습니다.');
           fetchUsers();
           handleCloseModal();
+
+          // 본인 계정을 수정한 경우 세션 새로고침 후 페이지 리로드
+          if (data.needsReload) {
+            await fetch('/api/admin/refresh-session', { method: 'POST' });
+            alert('권한이 변경되었습니다. 페이지를 새로고침합니다.');
+            window.location.reload();
+          }
         } else {
           alert(data.error || '수정 실패');
         }
