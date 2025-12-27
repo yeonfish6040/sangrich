@@ -7,13 +7,11 @@ const nextConfig: NextConfig = {
     // 빌드 시 타입 체킹 건너뛰기
     ignoreBuildErrors: true,
   },
+  images: {
+    unoptimized: true,
+  },
   async redirects() {
     return [
-      {
-        source: '/',
-        destination: '/about',
-        permanent: true,
-      },
       {
         source: '/word',
         destination: '/word/sunday-video',

@@ -13,7 +13,16 @@ export async function POST(request: NextRequest) {
 
     await dbConnect();
     const body = await request.json();
-    const sermon = await Sermon.create(body);
+
+    // Sermon은 기존 preacher 필드 사용 (author 대신)
+    // body에 preacher가 없으면 세션의 displayName 사용
+    const sermonData = {
+      ...body,
+      preacher: body.preacher || authResult.displayName || '박승열 목사',
+      createdBy: authResult.username || 'admin',
+    };
+
+    const sermon = await Sermon.create(sermonData);
     return NextResponse.json({ success: true, data: sermon });
   } catch (error) {
     return NextResponse.json({ success: false, error: String(error) }, { status: 400 });

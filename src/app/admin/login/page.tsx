@@ -1,16 +1,31 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // clear=true 쿼리가 있을 때만 유효하지 않은 세션 쿠키 정리
+  useEffect(() => {
+    if (searchParams.get('clear') !== 'true') return;
+
+    fetch('/api/admin/clear-session', { method: 'POST' })
+      .catch(() => {
+        // 에러 무시 (쿠키가 없을 수도 있음)
+      })
+      .finally(() => {
+        // clear=true가 남아있으면 새로고침/뒤로가기에서 반복 호출될 수 있으니 제거
+        router.replace('/admin/login');
+      });
+  }, [searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

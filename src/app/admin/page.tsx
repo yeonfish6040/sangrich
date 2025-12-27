@@ -10,15 +10,21 @@ import Business from '@/models/Business';
 import ChurchNews from '@/models/ChurchNews';
 import FaithInfo from '@/models/FaithInfo';
 import NewComer from '@/models/NewComer';
+import User from '@/models/User';
+import AlbumExtra1 from '@/models/AlbumExtra1';
+import AlbumExtra2 from '@/models/AlbumExtra2';
+import BoardExtra1 from '@/models/BoardExtra1';
+import BoardExtra2 from '@/models/BoardExtra2';
 import AdminLogout from '@/components/AdminLogout';
 import { requireAuth } from '@/lib/auth';
+import { hasPermission, BOARD_PERMISSIONS } from '@/lib/permissions';
 
 // 동적 렌더링 강제 (빌드 시 정적 생성 방지)
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
   // 세션 검증
-  await requireAuth();
+  const session = await requireAuth();
 
   await dbConnect();
 
@@ -34,6 +40,11 @@ export default async function AdminDashboard() {
     churchNewsCount,
     faithInfoCount,
     newcomersCount,
+    usersCount,
+    albumExtra1Count,
+    albumExtra2Count,
+    boardExtra1Count,
+    boardExtra2Count,
   ] = await Promise.all([
     Post.countDocuments(),
     Sermon.countDocuments(),
@@ -45,6 +56,11 @@ export default async function AdminDashboard() {
     ChurchNews.countDocuments(),
     FaithInfo.countDocuments(),
     NewComer.countDocuments(),
+    User.countDocuments(),
+    AlbumExtra1.countDocuments(),
+    AlbumExtra2.countDocuments(),
+    BoardExtra1.countDocuments(),
+    BoardExtra2.countDocuments(),
   ]);
 
   const menuItems = [
@@ -54,6 +70,7 @@ export default async function AdminDashboard() {
       href: '/admin/posts',
       count: postsCount,
       color: 'bg-blue-500',
+      permission: BOARD_PERMISSIONS.POSTS,
     },
     {
       title: '주일설교 영상',
@@ -61,6 +78,7 @@ export default async function AdminDashboard() {
       href: '/admin/sermons',
       count: sermonsCount,
       color: 'bg-green-500',
+      permission: BOARD_PERMISSIONS.SERMONS,
     },
     {
       title: '담임목사님 칼럼',
@@ -68,6 +86,7 @@ export default async function AdminDashboard() {
       href: '/admin/columns',
       count: columnsCount,
       color: 'bg-purple-500',
+      permission: BOARD_PERMISSIONS.COLUMNS,
     },
     {
       title: '교회학교 앨범',
@@ -75,6 +94,7 @@ export default async function AdminDashboard() {
       href: '/admin/albums',
       count: albumsCount,
       color: 'bg-yellow-500',
+      permission: BOARD_PERMISSIONS.ALBUMS,
     },
     {
       title: '교회앨범',
@@ -82,6 +102,7 @@ export default async function AdminDashboard() {
       href: '/admin/church-albums',
       count: churchAlbumsCount,
       color: 'bg-orange-500',
+      permission: BOARD_PERMISSIONS.CHURCH_ALBUMS,
     },
     {
       title: '교회 일정',
@@ -89,6 +110,7 @@ export default async function AdminDashboard() {
       href: '/admin/events',
       count: eventsCount,
       color: 'bg-red-500',
+      permission: BOARD_PERMISSIONS.EVENTS,
     },
     {
       title: '교우사업터',
@@ -96,6 +118,7 @@ export default async function AdminDashboard() {
       href: '/admin/businesses',
       count: businessesCount,
       color: 'bg-indigo-500',
+      permission: BOARD_PERMISSIONS.BUSINESSES,
     },
     {
       title: '교회 소식',
@@ -103,6 +126,7 @@ export default async function AdminDashboard() {
       href: '/admin/church-news',
       count: churchNewsCount,
       color: 'bg-pink-500',
+      permission: BOARD_PERMISSIONS.CHURCH_NEWS,
     },
     {
       title: '신앙정보 공유 터',
@@ -110,6 +134,7 @@ export default async function AdminDashboard() {
       href: '/admin/faith-info',
       count: faithInfoCount,
       color: 'bg-teal-500',
+      permission: BOARD_PERMISSIONS.FAITH_INFO,
     },
     {
       title: '새신자 소개',
@@ -117,6 +142,47 @@ export default async function AdminDashboard() {
       href: '/admin/newcomers',
       count: newcomersCount,
       color: 'bg-cyan-500',
+      permission: BOARD_PERMISSIONS.NEWCOMERS,
+    },
+    {
+      title: '앨범 게시판 1',
+      description: '추가 앨범 게시판',
+      href: '#',
+      count: albumExtra1Count,
+      color: 'bg-lime-500',
+      permission: BOARD_PERMISSIONS.ALBUM_EXTRA1,
+    },
+    {
+      title: '앨범 게시판 2',
+      description: '추가 앨범 게시판',
+      href: '#',
+      count: albumExtra2Count,
+      color: 'bg-emerald-500',
+      permission: BOARD_PERMISSIONS.ALBUM_EXTRA2,
+    },
+    {
+      title: '게시판 1',
+      description: '추가 일반 게시판',
+      href: '#',
+      count: boardExtra1Count,
+      color: 'bg-violet-500',
+      permission: BOARD_PERMISSIONS.BOARD_EXTRA1,
+    },
+    {
+      title: '게시판 2',
+      description: '추가 일반 게시판',
+      href: '#',
+      count: boardExtra2Count,
+      color: 'bg-fuchsia-500',
+      permission: BOARD_PERMISSIONS.BOARD_EXTRA2,
+    },
+    {
+      title: '사용자 관리',
+      description: '관리자 계정 관리',
+      href: '/admin/users',
+      count: usersCount,
+      color: 'bg-gray-700',
+      permission: null, // 사용자 관리는 admin만
     },
   ];
 
@@ -153,26 +219,40 @@ export default async function AdminDashboard() {
 
         {/* Menu Grid */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-xl"
-            >
-              <div className={`h-2 ${item.color}`} />
-              <div className="p-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600">
-                    {item.title}
-                  </h3>
-                  <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-700">
-                    {item.count}개
-                  </span>
+          {menuItems
+            .filter((item) => {
+              // 사용자 관리는 admin만
+              if (item.href === '/admin/users') {
+                return session.role === 'admin';
+              }
+
+              // 게시판 권한 체크
+              if (item.permission) {
+                return hasPermission(session.role, session.permissions, item.permission);
+              }
+
+              return true;
+            })
+            .map((item) => (
+              <Link
+                key={item.permission || item.href}
+                href={item.href}
+                className="group overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-xl"
+              >
+                <div className={`h-2 ${item.color}`} />
+                <div className="p-6">
+                  <div className="mb-2 flex items-center justify-between">
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600">
+                      {item.title}
+                    </h3>
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-700">
+                      {item.count}개
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600">{item.description}</p>
                 </div>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
         </div>
 
         {/* Quick Stats */}

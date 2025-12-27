@@ -4,9 +4,12 @@ import Sermon from '@/models/Sermon';
 import { requireAuth } from '@/lib/auth';
 
 export default async function AdminSermonsPage() {
-  await requireAuth();
+  const session = await requireAuth();
   await dbConnect();
-  const sermons = await Sermon.find().sort({ sermonDate: -1 }).lean();
+
+  // admin은 모든 글, user는 자기가 쓴 글만
+  const query = session.role === 'admin' ? {} : { createdBy: session.username };
+  const sermons = await Sermon.find(query).sort({ sermonDate: -1 }).lean();
 
   return (
     <div className="min-h-screen bg-gray-100">

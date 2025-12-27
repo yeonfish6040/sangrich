@@ -5,6 +5,7 @@ export interface IColumn {
   title: string;
   content: string;
   author: string;
+  createdBy: string; // 작성자 username (권한 체크용)
   viewCount: number;
   recommendCount: number;
   createdAt: Date;
@@ -24,6 +25,10 @@ const ColumnSchema = new Schema<IColumn>(
     author: {
       type: String,
       default: '관리자',
+    },
+    createdBy: {
+      type: String,
+      required: true,
     },
     viewCount: {
       type: Number,

@@ -4,10 +4,12 @@ import Post from '@/models/Post';
 import { requireAuth } from '@/lib/auth';
 
 export default async function AdminPostsPage() {
-  await requireAuth();
+  const session = await requireAuth();
   await dbConnect();
 
-  const posts = await Post.find().sort({ createdAt: -1 }).lean();
+  // admin은 모든 글, user는 자기가 쓴 글만
+  const query = session.role === 'admin' ? {} : { createdBy: session.username };
+  const posts = await Post.find(query).sort({ createdAt: -1 }).lean();
 
   return (
     <div className="min-h-screen bg-gray-100">

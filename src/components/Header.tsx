@@ -76,12 +76,12 @@ export default function Header() {
                   width={260}
                   height={100}
                   priority
-                  className="h-15 w-auto object-contain"
+                  className="h-15 w-auto object-contain relative right-30"
                 />
                 <span className="sr-only">상리교회</span>
               </Link>
 
-              <nav className="hidden items-center gap-10 text-xl font-bold md:flex">
+              <nav className="hidden items-center gap-10 text-xl font-bold md:flex relative right-10">
               {MAIN_NAV.map((item) => (
                 <Link
                   key={item.href}

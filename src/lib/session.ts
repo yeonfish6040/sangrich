@@ -4,6 +4,9 @@ import { cookies } from 'next/headers';
 export interface SessionData {
   isLoggedIn: boolean;
   username?: string;
+  displayName?: string;
+  role?: 'admin' | 'user';
+  permissions?: string[]; // 관리 가능한 게시판 목록
 }
 
 // 세션 옵션 설정

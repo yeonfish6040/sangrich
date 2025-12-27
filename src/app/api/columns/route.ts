@@ -13,7 +13,18 @@ export async function POST(request: NextRequest) {
 
     await dbConnect();
     const body = await request.json();
-    const column = await Column.create(body);
+
+    // 세션에서 사용자 정보 가져오기
+    const session = authResult;
+
+    // 작성자 정보 설정
+    const columnData = {
+      ...body,
+      author: session.displayName || '관리자',
+      createdBy: session.username || 'admin',
+    };
+
+    const column = await Column.create(columnData);
     return NextResponse.json({ success: true, data: column });
   } catch (error) {
     return NextResponse.json({ success: false, error: String(error) }, { status: 400 });

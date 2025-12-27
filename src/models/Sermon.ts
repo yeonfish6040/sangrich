@@ -6,6 +6,7 @@ export interface ISermon {
   thumbnail: string; // Base64 encoded image (e.g., "data:image/jpeg;base64,...")
   scripture: string;
   preacher: string;
+  createdBy: string; // 작성자 username (권한 체크용)
   videoUrl: string;
   viewCount: number;
   isFeatured: boolean;
@@ -31,6 +32,10 @@ const SermonSchema = new Schema<ISermon>(
     preacher: {
       type: String,
       default: '박승열 목사',
+    },
+    createdBy: {
+      type: String,
+      required: true,
     },
     videoUrl: {
       type: String,

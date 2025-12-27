@@ -4,6 +4,7 @@ export interface IPost {
   _id: string;
   title: string;
   author: string;
+  createdBy: string; // 작성자 username (권한 체크용)
   images: string[]; // Array of base64 encoded images (e.g., "data:image/jpeg;base64,...")
   viewCount: number;
   createdAt: Date;
@@ -19,6 +20,10 @@ const PostSchema = new Schema<IPost>(
     author: {
       type: String,
       default: '관리자',
+    },
+    createdBy: {
+      type: String,
+      required: true,
     },
     images: {
       type: [String],

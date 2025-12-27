@@ -4,9 +4,12 @@ import Column from '@/models/Column';
 import { requireAuth } from '@/lib/auth';
 
 export default async function AdminColumnsPage() {
-  await requireAuth();
+  const session = await requireAuth();
   await dbConnect();
-  const columns = await Column.find().sort({ createdAt: -1 }).lean();
+
+  // admin은 모든 글, user는 자기가 쓴 글만
+  const query = session.role === 'admin' ? {} : { createdBy: session.username };
+  const columns = await Column.find(query).sort({ createdAt: -1 }).lean();
 
   return (
     <div className="min-h-screen bg-gray-100">
