@@ -46,6 +46,9 @@ export default function Breadcrumb() {
     const segments = pathname.split("/").filter(Boolean);
     const items = [{ label: "🏠", href: "/" }];
 
+    // MongoDB ObjectId 패턴 체크 (24자 16진수)
+    const isMongoId = (str: string) => /^[0-9a-fA-F]{24}$/.test(str);
+
     // Main category (first segment)
     if (segments.length > 0) {
       const mainHref = `/${segments[0]}`;
@@ -53,10 +56,23 @@ export default function Breadcrumb() {
       items.push({ label: mainLabel, href: mainHref });
     }
 
-    // Sub page (full path)
+    // Sub page (full path) - UUID는 제외
     if (pathname !== `/${segments[0]}`) {
-      const subLabel = SUB_TITLE_BY_HREF[pathname] || segments[segments.length - 1];
-      items.push({ label: subLabel, href: pathname });
+      const lastSegment = segments[segments.length - 1];
+
+      // 마지막 세그먼트가 UUID가 아닌 경우만 표시
+      if (!isMongoId(lastSegment)) {
+        const subLabel = SUB_TITLE_BY_HREF[pathname] || lastSegment;
+        items.push({ label: subLabel, href: pathname });
+      } else {
+        // UUID인 경우, 상위 경로를 표시
+        const parentPath = segments.slice(0, -1).join("/");
+        if (parentPath && parentPath !== segments[0]) {
+          const parentHref = `/${parentPath}`;
+          const parentLabel = SUB_TITLE_BY_HREF[parentHref] || segments[segments.length - 2];
+          items.push({ label: parentLabel, href: parentHref });
+        }
+      }
     }
 
     return items;

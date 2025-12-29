@@ -57,7 +57,7 @@ export default async function ColumnDetailPage({ params }: PageProps) {
       {/* Content */}
       <div className="prose prose-lg max-w-none">
         <div
-          className="whitespace-pre-wrap leading-relaxed text-gray-800"
+          className="whitespace-pre-wrap leading-relaxed text-2xl font-semibold text-gray-800"
           dangerouslySetInnerHTML={{ __html: column.content }}
         />
       </div>

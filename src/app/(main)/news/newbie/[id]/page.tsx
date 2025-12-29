@@ -62,7 +62,7 @@ export default async function NewComerDetailPage({ params }: PageProps) {
         {newcomer.introduction && (
           <div className="mb-8 rounded-lg bg-white p-6 shadow">
             <h2 className="mb-4 text-xl font-semibold text-gray-900">소개</h2>
-            <p className="whitespace-pre-wrap text-gray-700">{newcomer.introduction}</p>
+            <p className="whitespace-pre-wrap text-2xl font-semibold text-gray-700">{newcomer.introduction}</p>
           </div>
         )}
 

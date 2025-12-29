@@ -110,7 +110,7 @@ export default async function SermonDetailPage({ params }: PageProps) {
         <h2 className="mb-4 text-xl font-bold text-gray-800">
           {sermon.scripture}
         </h2>
-        <div className="space-y-3 text-gray-700">
+        <div className="space-y-3 text-2xl font-semibold text-gray-700">
           <p>1절. 황제들만 내 마음에 원하는 바와 하나님께 구하는 바는 이스라엘을 위함이니 곧 그들로 구원을 받게 함이라</p>
           <p>2절. 내가 증언하노니 그들이 하나님께 열심이 있으나 올바른 지식을 따른 것이 아니니라</p>
           <p>3절. 하나님의 의를 모르고 자기 의를 세우려고 힘써 하나님의 의에 복종하지 아니하였느니라</p>

@@ -46,7 +46,7 @@ export default async function ChurchNewsDetailPage({ params }: { params: Promise
 
       <div className="mx-auto max-w-4xl px-6 py-10">
         <div className="rounded-lg bg-white p-8 shadow">
-          <div className="prose max-w-none whitespace-pre-wrap text-gray-700">{news.content}</div>
+          <div className="prose max-w-none whitespace-pre-wrap text-2xl font-semibold text-gray-700">{news.content}</div>
         </div>
 
         {/* Share buttons */}

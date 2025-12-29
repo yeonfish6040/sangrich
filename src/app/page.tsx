@@ -35,21 +35,22 @@ function MenuCard({
       href={card.href}
       className={
         `relative block w-full aspect-square rounded-sm shadow-[0_8px_18px_rgba(0,0,0,0.15)] ` +
+        `min-h-[100px] max-h-[min(20vh,180px)] ` +
         `${card.bgColor} ${className}`
       }
     >
-      <div className={"absolute p-4"}>
-        <div className={"text-base font-extrabold tracking-tight text-black"}>{card.title}</div>
-        <div className={"text-sm font-medium text-black/70"}>{card.subtitle}</div>
+      <div className="absolute p-2 sm:p-3 lg:p-4 z-40">
+        <div className="text-lg sm:text-xl lg:text-2xl font-semibold tracking-tight text-black">{card.title}</div>
+        <div className="text-sm sm:text-base lg:text-lg font-semibold text-black/70">{card.subtitle}</div>
       </div>
 
-      <div className={"absolute inset-x-0 bottom-0 flex items-end justify-center"}>
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-center">
         <Image
           src={card.image}
           alt={card.title}
           width={1000}
           height={1000}
-          className={"h-auto w-3/5 object-contain"}
+          className="h-auto w-3/5 object-contain relative right-10"
           priority
         />
       </div>
@@ -59,40 +60,25 @@ function MenuCard({
 
 function BottomCircleMenu() {
   return (
-    <div className={"w-full"}>
-      {/* background */}
-      <div
-        className={
-          "w-full rounded-xl overflow-visible"
-        }
-      >
-        <div className={"w-full px-6 py-8"}>
-          <div
-            className={
-              "mx-auto flex flex-wrap items-center justify-center gap-8 px-6"
-            }
-          >
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full rounded-xl overflow-visible">
+        <div className="w-full py-6 sm:py-8">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 lg:gap-6">
             {bottomMenus.map((m) => (
               <Link
                 key={m.href}
                 href={m.href}
-                className={"flex shrink-0 items-center justify-center"}
+                className="flex shrink-0 items-center justify-center"
               >
-                <div
-                  className={
-                    "aspect-square w-[clamp(4.5rem,10vw,8rem)] rounded-full bg-white/70 " +
-                    "backdrop-blur shadow-sm flex flex-col items-center justify-center gap-2 px-2"
-                  }
-                >
+                <div className="aspect-square w-[clamp(3.5rem,10vw,6.5rem)] rounded-full bg-white/70 backdrop-blur shadow-lg hover:shadow-xl transition-shadow flex flex-col items-center justify-center gap-1 sm:gap-2 p-2">
                   <Image
                     src={m.icon}
                     alt={m.label}
-                    width={0}
-                    height={0}
-                    sizes="10vw"
-                    className={"h-auto w-[45%] object-contain"}
+                    width={60}
+                    height={60}
+                    className="h-auto w-[40%] sm:w-[45%] object-contain"
                   />
-                  <div className={"text-sm font-semibold text-black/80 text-center leading-tight"}>
+                  <div className="text-[0.65rem] sm:text-xs lg:text-sm font-semibold text-black/80 text-center leading-tight px-1">
                     {m.label}
                   </div>
                 </div>
@@ -118,33 +104,68 @@ export default function Home() {
   }, [backgroundImages.length]);
 
   return (
-    <div className={"h-full"}>
-      <Image src={backgroundImages[currentImageIndex]} alt={"배경"} height={1000} width={1920} priority
-             className={"h-[86vh] fixed z-0"}
-      />
-      <div className={"h-[86vh] w-4/5 mx-auto flex-row"}>
-        <div className={"flex flex-row justify-between z-20 flex-1 relative"}>
-          <div className={"left flex-col justify-between h-full w-fit"}>
-            <Image src={"/intro.png"} alt={"인트로"} height={100} width={100} priority className={"h-1/2 w-auto"} />
-          </div>
+    <div className="min-h-screen relative">
+      {/* Background Image - Responsive */}
+      <div className="fixed inset-0 z-0">
+        <Image
+          src={backgroundImages[currentImageIndex]}
+          alt="배경"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
 
-          <div className={"right relative h-full w-5/7 flex items-start justify-end pr-6 pt-14"}>
-            <div className={"grid w-full grid-cols-3 auto-rows-fr gap-4 sm:gap-5 lg:gap-6"}>
-              {/* Row 1: 3 cards */}
-              <MenuCard card={menuCards[0]} className="col-start-1" />
-              <MenuCard card={menuCards[1]} className="col-start-2" />
-              <MenuCard card={menuCards[2]} className="col-start-3" />
+      {/* Main Content Container - Responsive */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Hero Section with Cards */}
+        <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 h-full">
+            {/* Left Side - Intro Image */}
+            <div className="flex items-center justify-center lg:justify-start lg:flex-1">
+              <div className="w-full max-w-md lg:max-w-none">
+                <Image
+                  src="/intro.png"
+                  alt="인트로"
+                  width={500}
+                  height={500}
+                  priority
+                  className="w-full h-auto max-h-[min(40vh,400px)] lg:max-h-[min(60vh,600px)] object-contain"
+                />
+              </div>
+            </div>
 
-              {/* Row 2: 2 cards (shifted right) */}
-              <MenuCard card={menuCards[3]} className="col-start-2" />
-              <MenuCard card={menuCards[4]} className="col-start-3" />
+            {/* Right Side - Menu Cards */}
+            <div className="flex-1 lg:flex-[1.5] flex items-start justify-center lg:justify-end">
+              <div className="w-full max-w-2xl h-fit">
+                {/* Desktop Layout (3 columns pyramid) */}
+                <div className="hidden md:grid grid-cols-3 gap-3 lg:gap-4 xl:gap-6">
+                  {/* Row 1: 3 cards */}
+                  <MenuCard card={menuCards[0]} className="col-start-1" />
+                  <MenuCard card={menuCards[1]} className="col-start-2" />
+                  <MenuCard card={menuCards[2]} className="col-start-3" />
 
-              {/* Row 3: 1 card (right-aligned) */}
-              <MenuCard card={menuCards[5]} className="col-start-3" />
+                  {/* Row 2: 2 cards (shifted right) */}
+                  <MenuCard card={menuCards[3]} className="col-start-2" />
+                  <MenuCard card={menuCards[4]} className="col-start-3" />
+
+                  {/* Row 3: 1 card (right-aligned) */}
+                  <MenuCard card={menuCards[5]} className="col-start-3" />
+                </div>
+
+                {/* Mobile/Tablet Layout (2 columns) */}
+                <div className="grid md:hidden grid-cols-2 gap-3 sm:gap-4">
+                  {menuCards.map((card, index) => (
+                    <MenuCard key={index} card={card} />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className={"relative z-20 mt-1/3"}>
+
+        {/* Bottom Circle Menu */}
+        <div className="relative z-20 pb-8">
           <BottomCircleMenu />
         </div>
       </div>
