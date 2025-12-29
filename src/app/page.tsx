@@ -34,7 +34,7 @@ function MenuCard({
     <Link
       href={card.href}
       className={
-        `relative block w-full aspect-square rounded-sm shadow-[0_8px_18px_rgba(0,0,0,0.15)] ` +
+        `relative block w-full aspect-square overflow-hidden rounded-sm shadow-[0_8px_18px_rgba(0,0,0,0.15)] ` +
         `min-h-[100px] max-h-[min(20vh,180px)] ` +
         `${card.bgColor} ${className}`
       }
@@ -44,15 +44,17 @@ function MenuCard({
         <div className="text-sm sm:text-base lg:text-lg font-semibold text-black/70">{card.subtitle}</div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-center">
-        <Image
-          src={card.image}
-          alt={card.title}
-          width={1000}
-          height={1000}
-          className="h-auto w-3/5 object-contain relative right-10"
-          priority
-        />
+      <div className="absolute inset-x-0 bottom-0 flex justify-center">
+        <div className="relative flex justify-center w-full">
+          <Image
+            src={card.image}
+            alt={card.title}
+            width={1000}
+            height={1000}
+            className="relative z-10 h-auto w-3/5 object-contain"
+            priority
+          />
+        </div>
       </div>
     </Link>
   );
@@ -136,8 +138,8 @@ export default function Home() {
             </div>
 
             {/* Right Side - Menu Cards */}
-            <div className="flex-1 lg:flex-[1.5] flex items-start justify-center lg:justify-end">
-              <div className="w-full max-w-2xl h-fit">
+            <div className="flex-1 lg:flex-[1.5] flex items-start justify-center">
+              <div className="w-full max-w-2xl h-fit mx-auto">
                 {/* Desktop Layout (3 columns pyramid) */}
                 <div className="hidden md:grid grid-cols-3 gap-3 lg:gap-4 xl:gap-6">
                   {/* Row 1: 3 cards */}
