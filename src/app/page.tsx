@@ -35,7 +35,6 @@ function MenuCard({
       href={card.href}
       className={
         `relative block w-full aspect-square overflow-hidden rounded-sm shadow-[0_8px_18px_rgba(0,0,0,0.15)] ` +
-        `min-h-[100px] max-h-[min(20vh,180px)] ` +
         `${card.bgColor} ${className}`
       }
     >
@@ -72,7 +71,7 @@ function BottomCircleMenu() {
                 href={m.href}
                 className="flex shrink-0 items-center justify-center"
               >
-                <div className="aspect-square w-[clamp(3.5rem,10vw,6.5rem)] rounded-full bg-white/70 backdrop-blur shadow-lg hover:shadow-xl transition-shadow flex flex-col items-center justify-center gap-1 sm:gap-2 p-2">
+                <div className="aspect-square w-[clamp(4.5rem,14vw,9rem)] rounded-full bg-white/70 backdrop-blur shadow-lg hover:shadow-xl transition-shadow flex flex-col items-center justify-center gap-1 sm:gap-2 p-2">
                   <Image
                     src={m.icon}
                     alt={m.label}
@@ -121,7 +120,7 @@ export default function Home() {
       {/* Main Content Container - Responsive */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Hero Section with Cards */}
-        <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="flex-1 w-full w-1/5 px-4 sm:px-6 lg:px-8 py-8 md:py-12">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 h-full">
             {/* Left Side - Intro Image */}
             <div className="flex items-center justify-center lg:justify-start lg:flex-1">
@@ -132,14 +131,14 @@ export default function Home() {
                   width={500}
                   height={500}
                   priority
-                  className="w-full h-auto max-h-[min(40vh,400px)] lg:max-h-[min(60vh,600px)] object-contain"
+                  className="w-full h-auto object-contain"
                 />
               </div>
             </div>
 
             {/* Right Side - Menu Cards */}
-            <div className="flex-1 lg:flex-[1.5] flex items-start justify-center">
-              <div className="w-full max-w-2xl h-fit mx-auto">
+            <div className="flex-[1] flex items-start justify-center">
+              <div className="w-full max-w-xl h-fit">
                 {/* Desktop Layout (3 columns pyramid) */}
                 <div className="hidden md:grid grid-cols-3 gap-3 lg:gap-4 xl:gap-6">
                   {/* Row 1: 3 cards */}
