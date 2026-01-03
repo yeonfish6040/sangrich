@@ -3,11 +3,61 @@ import Post from '@/models/Post';
 import { notFound } from 'next/navigation';
 import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
+import type { Metadata } from 'next';
+import { buildAbsoluteUrl, getBaseUrl } from '@/lib/metadata';
 
 interface PageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const baseUrl = getBaseUrl();
+  const canonical = `${baseUrl}/worship/weekly/${id}`;
+  const ogImage = buildAbsoluteUrl(baseUrl, '/logo_horizontal.png');
+
+  await dbConnect();
+  const post = await Post.findById(id).lean();
+
+  if (!post) {
+    return {
+      alternates: { canonical },
+      openGraph: {
+        url: canonical,
+        type: 'article',
+        siteName: '상리교회',
+        images: [{ url: ogImage }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: [ogImage],
+      },
+    };
+  }
+
+  const description = '상리교회 주보';
+
+  return {
+    title: `${post.title} | 상리교회`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: post.title,
+      description,
+      url: canonical,
+      type: 'article',
+      siteName: '상리교회',
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function WeeklyDetailPage({ params }: PageProps) {

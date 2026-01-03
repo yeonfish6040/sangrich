@@ -3,11 +3,61 @@ import Column from '@/models/Column';
 import { notFound } from 'next/navigation';
 import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
+import type { Metadata } from 'next';
+import { buildAbsoluteUrl, getBaseUrl } from '@/lib/metadata';
 
 interface PageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const baseUrl = getBaseUrl();
+  const canonical = `${baseUrl}/word/column/${id}`;
+  const ogImage = buildAbsoluteUrl(baseUrl, '/logo_horizontal.png');
+
+  await dbConnect();
+  const column = await Column.findById(id).lean();
+
+  if (!column) {
+    return {
+      alternates: { canonical },
+      openGraph: {
+        url: canonical,
+        type: 'article',
+        siteName: '상리교회',
+        images: [{ url: ogImage }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: [ogImage],
+      },
+    };
+  }
+
+  const description = '상리교회 목사님 컬럼';
+
+  return {
+    title: `${column.title} | 상리교회`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: column.title,
+      description,
+      url: canonical,
+      type: 'article',
+      siteName: '상리교회',
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: column.title,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function ColumnDetailPage({ params }: PageProps) {

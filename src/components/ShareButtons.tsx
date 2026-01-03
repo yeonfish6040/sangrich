@@ -95,35 +95,17 @@ export default function ShareButtons({ title, url, description, imageUrl }: Shar
           return;
         }
 
-        const payload = {
-          objectType: 'feed',
-          content: {
-            title: title,
-            description: shareDescription,
-            imageUrl: shareImage,
-            link: {
-              mobileWebUrl: safeUrl,
-              webUrl: safeUrl,
-            },
-          },
-          buttons: [
-            {
-              title: '자세히 보기',
-              link: {
-                mobileWebUrl: safeUrl,
-                webUrl: safeUrl,
-              },
-            },
-          ],
-        };
-
-        if (window.Kakao.Link?.sendDefault) {
-          window.Kakao.Link.sendDefault(payload);
+        if (window.Kakao.Share?.sendScrap) {
+          window.Kakao.Share.sendScrap({
+            requestUrl: safeUrl,
+          });
           return;
         }
 
-        if (window.Kakao.Share?.sendDefault) {
-          window.Kakao.Share.sendDefault(payload);
+        if (window.Kakao.Link?.sendScrap) {
+          window.Kakao.Link.sendScrap({
+            requestUrl: safeUrl,
+          });
           return;
         }
 

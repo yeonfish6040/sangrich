@@ -4,11 +4,61 @@ import { notFound } from 'next/navigation';
 import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+import { buildAbsoluteUrl, getBaseUrl } from '@/lib/metadata';
 
 interface PageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const baseUrl = getBaseUrl();
+  const canonical = `${baseUrl}/news/newbie/${id}`;
+  const ogImage = buildAbsoluteUrl(baseUrl, '/logo_horizontal.png');
+
+  await dbConnect();
+  const newcomer = await NewComer.findById(id).lean();
+
+  if (!newcomer) {
+    return {
+      alternates: { canonical },
+      openGraph: {
+        url: canonical,
+        type: 'article',
+        siteName: '상리교회',
+        images: [{ url: ogImage }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: [ogImage],
+      },
+    };
+  }
+
+  const description = newcomer.introduction || '상리교회 새가족 소개';
+
+  return {
+    title: `${newcomer.name} | 상리교회`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: newcomer.name,
+      description,
+      url: canonical,
+      type: 'article',
+      siteName: '상리교회',
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: newcomer.name,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function NewComerDetailPage({ params }: PageProps) {

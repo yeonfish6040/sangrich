@@ -3,6 +3,8 @@ import Sermon from '@/models/Sermon';
 import { notFound } from 'next/navigation';
 import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
+import type { Metadata } from 'next';
+import { buildAbsoluteUrl, getBaseUrl } from '@/lib/metadata';
 
 interface PageProps {
   params: Promise<{
@@ -33,6 +35,54 @@ function getYouTubeVideoId(url: string): string | null {
   }
 
   return null;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const baseUrl = getBaseUrl();
+  const canonical = `${baseUrl}/word/sunday-video/${id}`;
+  const ogImage = buildAbsoluteUrl(baseUrl, '/logo_horizontal.png');
+
+  await dbConnect();
+  const sermon = await Sermon.findById(id).lean();
+
+  if (!sermon) {
+    return {
+      alternates: { canonical },
+      openGraph: {
+        url: canonical,
+        type: 'article',
+        siteName: '상리교회',
+        images: [{ url: ogImage }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: [ogImage],
+      },
+    };
+  }
+
+  const description = sermon.scripture || '상리교회 주일설교 영상';
+
+  return {
+    title: `${sermon.title} | 상리교회`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: sermon.title,
+      description,
+      url: canonical,
+      type: 'article',
+      siteName: '상리교회',
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: sermon.title,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function SermonDetailPage({ params }: PageProps) {

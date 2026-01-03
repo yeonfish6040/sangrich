@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
+import type { Metadata } from 'next';
+import { buildAbsoluteUrl, getBaseUrl } from '@/lib/metadata';
 
 async function getFaithInfo(id: string) {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/faith-info/${id}`, {
@@ -9,6 +11,54 @@ async function getFaithInfo(id: string) {
   if (!res.ok) return null;
   const data = await res.json();
   return data.data;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const baseUrl = getBaseUrl();
+  const canonical = `${baseUrl}/faith/info/${id}`;
+  const ogImage = buildAbsoluteUrl(baseUrl, '/logo_horizontal.png');
+  const faithInfo = await getFaithInfo(id);
+
+  if (!faithInfo) {
+    return {
+      alternates: { canonical },
+      openGraph: {
+        url: canonical,
+        type: 'article',
+        siteName: '상리교회',
+        images: [{ url: ogImage }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: [ogImage],
+      },
+    };
+  }
+
+  const description = faithInfo.content
+    ? String(faithInfo.content).replace(/<[^>]*>/g, '').slice(0, 120)
+    : '상리교회 신앙 정보';
+
+  return {
+    title: `${faithInfo.title} | 상리교회`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: faithInfo.title,
+      description,
+      url: canonical,
+      type: 'article',
+      siteName: '상리교회',
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: faithInfo.title,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function FaithInfoDetailPage({ params }: { params: Promise<{ id: string }> }) {

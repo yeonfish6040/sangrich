@@ -3,11 +3,61 @@ import ChurchAlbum from '@/models/ChurchAlbum';
 import { notFound } from 'next/navigation';
 import CommentSection from '@/components/CommentSection';
 import ShareButtons from '@/components/ShareButtons';
+import type { Metadata } from 'next';
+import { buildAbsoluteUrl, getBaseUrl } from '@/lib/metadata';
 
 interface PageProps {
   params: Promise<{
     id: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const baseUrl = getBaseUrl();
+  const canonical = `${baseUrl}/news/album/${id}`;
+  const ogImage = buildAbsoluteUrl(baseUrl, '/logo_horizontal.png');
+
+  await dbConnect();
+  const album = await ChurchAlbum.findById(id).lean();
+
+  if (!album) {
+    return {
+      alternates: { canonical },
+      openGraph: {
+        url: canonical,
+        type: 'article',
+        siteName: '상리교회',
+        images: [{ url: ogImage }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        images: [ogImage],
+      },
+    };
+  }
+
+  const description = '상리교회 교회앨범';
+
+  return {
+    title: `${album.title} | 상리교회`,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: album.title,
+      description,
+      url: canonical,
+      type: 'article',
+      siteName: '상리교회',
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: album.title,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function ChurchAlbumDetailPage({ params }: PageProps) {
