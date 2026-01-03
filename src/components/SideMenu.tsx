@@ -51,7 +51,7 @@ export default function SideMenu() {
 
   return (
     <div className="w-full flex">
-      <aside className="w-3/4 max-w-[220px] bg-white">
+      <aside className="w-full bg-white md:max-w-[220px]">
       {/* Header */}
       <div className="bg-[#28648E] px-4 py-4 text-center">
         <h2 className="text-xl font-extrabold tracking-tight text-white">

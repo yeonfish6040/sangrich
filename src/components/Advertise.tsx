@@ -44,10 +44,10 @@ export default function Advertise({ category, menuHrefs }: Props) {
   })();
 
   return (
-    <div className="w-full min-w-[1100px]">
+    <div className="w-full">
       <div className="relative mx-auto">
         {/* 배경 배너 이미지 */}
-        <div className="relative h-65 overflow-hidden">
+        <div className="relative h-36 overflow-hidden sm:h-44 md:h-56 lg:h-64">
           <Image
             src={`/advertise${safe}.png`}
             alt={`advertise-${safe}`}

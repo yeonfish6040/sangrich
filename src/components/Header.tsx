@@ -50,6 +50,8 @@ export const SUB_NAV_BY_MAIN: Record<string, { label: string; href: string }[]> 
 export default function Header() {
   const pathname = usePathname();
   const [shownMainHref, setShownMainHref] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileOpenMainHref, setMobileOpenMainHref] = useState<string | null>(null);
 
   const activeMain =
     MAIN_NAV.find((m) => pathname === m.href || pathname.startsWith(m.href + "/")) ?? null;
@@ -58,6 +60,11 @@ export default function Header() {
     setShownMainHref(activeMain?.href ?? null);
   }, [activeMain?.href]);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setMobileOpenMainHref(null);
+  }, [pathname]);
+
   const subNav = shownMainHref ? SUB_NAV_BY_MAIN[shownMainHref] ?? [] : [];
 
   return (
@@ -65,10 +72,10 @@ export default function Header() {
 
       {/* Main nav row */}
       <div className="border-b border-gray-100">
-        <div className="w-full px-8">
-          <div className="relative flex h-20 items-center justify-center">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="relative flex h-16 items-center justify-center md:h-20">
             {/* Center group: Logo + Main menu */}
-            <div className="flex items-center gap-16">
+            <div className="flex items-center gap-6 md:gap-12">
               <Link href="/" className="gap-0">
                 <Image
                   src="/logo_horizontal.png"
@@ -76,12 +83,12 @@ export default function Header() {
                   width={260}
                   height={100}
                   priority
-                  className="h-15 w-auto object-contain relative right-30"
+                  className="h-10 w-auto object-contain md:h-14"
                 />
                 <span className="sr-only">상리교회</span>
               </Link>
 
-              <nav className="hidden items-center gap-10 text-xl font-bold md:flex relative right-10">
+              <nav className="hidden items-center gap-8 text-lg font-bold md:flex lg:text-xl">
               {MAIN_NAV.map((item) => (
                 <Link
                   key={item.href}
@@ -103,8 +110,11 @@ export default function Header() {
             <div className="absolute right-8 md:hidden">
               <button
                 type="button"
-                className="rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700"
+                className="rounded-md border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700"
                 aria-label="메뉴 열기"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-nav"
+                onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               >
                 메뉴
               </button>
@@ -113,9 +123,48 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Mobile menu */}
+      {isMobileMenuOpen && (
+        <div id="mobile-nav" className="border-b border-gray-100 bg-white md:hidden">
+          <nav className="px-4 py-3">
+            <div className="flex flex-col gap-3 text-base font-semibold text-gray-900">
+              {MAIN_NAV.map((item) => {
+                const isOpen = mobileOpenMainHref === item.href;
+                return (
+                  <div key={item.href} className="flex flex-col">
+                    <button
+                      type="button"
+                      className={`flex items-center justify-between ${
+                        activeMain?.href === item.href ? "text-gray-900" : "text-gray-600"
+                      }`}
+                      aria-expanded={isOpen}
+                      onClick={() =>
+                        setMobileOpenMainHref((prev) => (prev === item.href ? null : item.href))
+                      }
+                    >
+                      <span>{item.label}</span>
+                      <span className="text-sm">{isOpen ? "−" : "+"}</span>
+                    </button>
+                    {isOpen && (SUB_NAV_BY_MAIN[item.href] ?? []).length > 0 && (
+                      <div className="mt-2 flex flex-col gap-2 pl-3 text-sm font-semibold text-gray-700">
+                        {(SUB_NAV_BY_MAIN[item.href] ?? []).map((sub) => (
+                          <Link key={sub.href} href={sub.href} className="hover:text-gray-900">
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </nav>
+        </div>
+      )}
+
       {/* Sub nav (teal bar) */}
       {subNav.length > 0 && (
-        <div className="bg-[#6ea7a0]">
+        <div className="hidden bg-[#6ea7a0] md:block">
           <div className="w-full px-8">
             <nav className="flex h-10 flex-wrap items-center justify-center gap-x-8 gap-y-2 text-base font-semibold text-white/95">
               {subNav.map((item) => (
