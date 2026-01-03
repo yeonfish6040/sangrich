@@ -12,6 +12,7 @@ export default function EditSermonPage({ params }: { params: Promise<{ id: strin
   const [formData, setFormData] = useState({
     title: '',
     scripture: '',
+    scriptureText: '',
     preacher: '',
     videoUrl: '',
     sermonDate: '',
@@ -28,6 +29,7 @@ export default function EditSermonPage({ params }: { params: Promise<{ id: strin
           setFormData({
             title: sermon.title,
             scripture: sermon.scripture,
+            scriptureText: sermon.scriptureText || '',
             preacher: sermon.preacher,
             videoUrl: sermon.videoUrl || '',
             sermonDate: new Date(sermon.sermonDate).toISOString().split('T')[0],
@@ -136,6 +138,19 @@ export default function EditSermonPage({ params }: { params: Promise<{ id: strin
                 onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">성경내용</label>
+              <textarea
+                value={formData.scriptureText}
+                onChange={(e) => setFormData({ ...formData, scriptureText: e.target.value })}
+                className="mt-1 block min-h-[140px] w-full rounded-md border border-gray-300 px-3 py-2"
+                placeholder="필요한 경우에만 입력하세요."
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                비워두면 상세 페이지에 표시되지 않습니다.
+              </p>
             </div>
 
             <div>

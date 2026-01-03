@@ -11,6 +11,7 @@ export default function NewSermonPage() {
   const [formData, setFormData] = useState({
     title: '',
     scripture: '',
+    scriptureText: '',
     preacher: '박승열 목사',
     videoUrl: '',
     sermonDate: '',
@@ -104,6 +105,19 @@ export default function NewSermonPage() {
                 className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
                 placeholder="예: 요한복음 3:16"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">성경내용</label>
+              <textarea
+                value={formData.scriptureText}
+                onChange={(e) => setFormData({ ...formData, scriptureText: e.target.value })}
+                className="mt-1 block min-h-[140px] w-full rounded-md border border-gray-300 px-3 py-2"
+                placeholder="필요한 경우에만 입력하세요."
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                비워두면 상세 페이지에 표시되지 않습니다.
+              </p>
             </div>
 
             <div>

@@ -2,6 +2,34 @@ import dbConnect from '@/lib/mongodb';
 import Sermon from '@/models/Sermon';
 import Link from 'next/link';
 
+function getYouTubeVideoId(url: string): string | null {
+  if (!url) return null;
+  const raw = url.trim();
+  if (!raw) return null;
+
+  const directMatch = raw.match(/^([a-zA-Z0-9_-]{11})$/);
+  if (directMatch) return directMatch[1];
+
+  const patterns = [
+    /(?:youtu\.be\/)([^?&#/]+)/,
+    /(?:youtube\.com\/watch\?v=)([^&?#]+)/,
+    /(?:youtube\.com\/embed\/)([^?&#/]+)/,
+    /(?:youtube\.com\/shorts\/)([^?&#/]+)/,
+    /(?:youtube\.com\/live\/)([^?&#/]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = raw.match(pattern);
+    if (match) return match[1];
+  }
+
+  return null;
+}
+
+function getYouTubeThumbnailUrl(videoId: string): string {
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+}
+
 interface PageProps {
   searchParams: Promise<{
     page?: string;
@@ -94,7 +122,7 @@ export default async function SundayVideoPage({ searchParams }: PageProps) {
               <th className="w-32 px-4 py-3 text-center text-sm font-semibold">
                 사진
               </th>
-              <th className="px-4 py-3 text-center text-sm font-semibold">
+              <th className="min-w-[220px] px-4 py-3 text-left text-sm font-semibold">
                 제목
               </th>
               <th className="w-40 px-4 py-3 text-center text-sm font-semibold">
@@ -130,6 +158,11 @@ export default async function SundayVideoPage({ searchParams }: PageProps) {
                   })
                   .replace(/\. /g, '-')
                   .replace(/\.$/, '');
+                const youtubeVideoId = getYouTubeVideoId(sermon.videoUrl ?? '');
+                const fallbackThumbnail = youtubeVideoId
+                  ? getYouTubeThumbnailUrl(youtubeVideoId)
+                  : '';
+                const thumbnailUrl = sermon.thumbnail || fallbackThumbnail;
 
                 return (
                   <tr
@@ -149,10 +182,10 @@ export default async function SundayVideoPage({ searchParams }: PageProps) {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-center">
-                        {sermon.thumbnail ? (
+                        {thumbnailUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={sermon.thumbnail}
+                            src={thumbnailUrl}
                             alt={sermon.title}
                             className="h-[75px] w-[100px] rounded object-cover"
                           />
@@ -163,10 +196,10 @@ export default async function SundayVideoPage({ searchParams }: PageProps) {
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm">
+                    <td className="px-4 py-3 text-sm leading-relaxed">
                       <Link
                         href={`/word/sunday-video/${sermon._id.toString()}`}
-                        className="hover:underline"
+                        className="block break-keep hover:underline"
                       >
                         {sermon.title}
                       </Link>

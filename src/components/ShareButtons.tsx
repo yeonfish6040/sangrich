@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 interface ShareButtonsProps {
   title: string;
   url?: string;
@@ -8,30 +10,69 @@ interface ShareButtonsProps {
 }
 
 export default function ShareButtons({ title, url, description, imageUrl }: ShareButtonsProps) {
-  const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
-  const shareDescription = description || '상리치교회 소식을 공유합니다.';
-  const shareImage = imageUrl || 'https://via.placeholder.com/300x300.png?text=상리치교회';
+  const [resolvedUrl, setResolvedUrl] = useState('');
+
+  const normalizeUrl = (value: string) => {
+    const trimmed = value.trim();
+    if (!trimmed) return '';
+    if (typeof window !== 'undefined' && trimmed.startsWith('/')) {
+      return `${window.location.origin}${trimmed}`;
+    }
+    return trimmed;
+  };
+
+  const resolveShareUrl = () => {
+    if (resolvedUrl) return resolvedUrl;
+    if (url) return normalizeUrl(url);
+    if (typeof window !== 'undefined') return window.location.href;
+    return process.env.NEXT_PUBLIC_SITE_URL || '';
+  };
+
+  const resolveShareImage = () => {
+    if (imageUrl) return normalizeUrl(imageUrl);
+    if (typeof window !== 'undefined') {
+      return `${window.location.origin}/logo_horizontal.png`;
+    }
+    const base = process.env.NEXT_PUBLIC_SITE_URL;
+    return base ? `${base}/logo_horizontal.png` : '';
+  };
+
+  useEffect(() => {
+    if (url) {
+      setResolvedUrl(normalizeUrl(url));
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      setResolvedUrl(window.location.href);
+    }
+  }, [url]);
+
+  const shareDescription = description || '상리교회 소식을 공유합니다.';
+  const shareImage = resolveShareImage() || 'https://via.placeholder.com/300x300.png?text=상리치교회';
 
   const handleNaverBlog = () => {
+    const safeUrl = resolveShareUrl();
     window.open(
-      `https://blog.naver.com/openapi/share?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(title)}`,
+      `https://blog.naver.com/openapi/share?url=${encodeURIComponent(safeUrl)}&title=${encodeURIComponent(title)}`,
       '_blank',
       'width=600,height=600'
     );
   };
 
   const handleTwitter = () => {
+    const safeUrl = resolveShareUrl();
     window.open(
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`,
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(safeUrl)}&text=${encodeURIComponent(title)}`,
       '_blank',
       'width=600,height=600'
     );
   };
 
   const handleFacebook = () => {
+    const safeUrl = resolveShareUrl();
     // Facebook Share Dialog 사용
     // 더 많은 옵션은 Facebook App ID가 필요합니다
-    const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(title)}`;
+    const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(safeUrl)}&quote=${encodeURIComponent(title)}`;
     window.open(
       fbShareUrl,
       'facebook-share-dialog',
@@ -48,27 +89,45 @@ export default function ShareButtons({ title, url, description, imageUrl }: Shar
           return;
         }
 
-        window.Kakao.Share.sendDefault({
+        const safeUrl = resolveShareUrl();
+        if (!safeUrl) {
+          alert('공유 링크를 불러오지 못했습니다. 페이지를 새로고침 해주세요.');
+          return;
+        }
+
+        const payload = {
           objectType: 'feed',
           content: {
             title: title,
             description: shareDescription,
             imageUrl: shareImage,
             link: {
-              mobileWebUrl: shareUrl,
-              webUrl: shareUrl,
+              mobileWebUrl: safeUrl,
+              webUrl: safeUrl,
             },
           },
           buttons: [
             {
               title: '자세히 보기',
               link: {
-                mobileWebUrl: shareUrl,
-                webUrl: shareUrl,
+                mobileWebUrl: safeUrl,
+                webUrl: safeUrl,
               },
             },
           ],
-        });
+        };
+
+        if (window.Kakao.Link?.sendDefault) {
+          window.Kakao.Link.sendDefault(payload);
+          return;
+        }
+
+        if (window.Kakao.Share?.sendDefault) {
+          window.Kakao.Share.sendDefault(payload);
+          return;
+        }
+
+        alert('카카오톡 공유 기능을 사용할 수 없습니다.');
       } catch (error) {
         console.error('카카오톡 공유 실패:', error);
         alert('카카오톡 공유에 실패했습니다.');
@@ -80,7 +139,7 @@ export default function ShareButtons({ title, url, description, imageUrl }: Shar
 
   const handleCopyUrl = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(resolveShareUrl());
       alert('링크가 복사되었습니다.');
     } catch (err) {
       alert('링크 복사에 실패했습니다.');
@@ -101,7 +160,7 @@ export default function ShareButtons({ title, url, description, imageUrl }: Shar
         await navigator.share({
           title: title,
           text: title,
-          url: shareUrl,
+          url: resolveShareUrl(),
         });
       } catch (err) {
         // 사용자가 취소한 경우 무시

@@ -5,6 +5,7 @@ export interface ISermon {
   title: string;
   thumbnail: string; // Base64 encoded image (e.g., "data:image/jpeg;base64,...")
   scripture: string;
+  scriptureText?: string;
   preacher: string;
   createdBy: string; // 작성자 username (권한 체크용)
   videoUrl: string;
@@ -28,6 +29,10 @@ const SermonSchema = new Schema<ISermon>(
     scripture: {
       type: String,
       required: [true, '본문을 입력해주세요.'],
+    },
+    scriptureText: {
+      type: String,
+      default: '',
     },
     preacher: {
       type: String,

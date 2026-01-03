@@ -13,15 +13,22 @@ interface PageProps {
 // Extract YouTube video ID from URL
 function getYouTubeVideoId(url: string): string | null {
   if (!url) return null;
+  const raw = url.trim();
+  if (!raw) return null;
 
-  // Handle different YouTube URL formats
+  const directMatch = raw.match(/^([a-zA-Z0-9_-]{11})$/);
+  if (directMatch) return directMatch[1];
+
   const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-    /^([a-zA-Z0-9_-]{11})$/ // Direct video ID
+    /(?:youtu\.be\/)([^?&#/]+)/,
+    /(?:youtube\.com\/watch\?v=)([^&?#]+)/,
+    /(?:youtube\.com\/embed\/)([^?&#/]+)/,
+    /(?:youtube\.com\/shorts\/)([^?&#/]+)/,
+    /(?:youtube\.com\/live\/)([^?&#/]+)/,
   ];
 
   for (const pattern of patterns) {
-    const match = url.match(pattern);
+    const match = raw.match(pattern);
     if (match) return match[1];
   }
 
@@ -106,17 +113,16 @@ export default async function SermonDetailPage({ params }: PageProps) {
       </div>
 
       {/* Sermon Outline */}
-      <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-xl font-bold text-gray-800">
-          {sermon.scripture}
-        </h2>
-        <div className="space-y-3 text-2xl font-semibold text-gray-700">
-          <p>1절. 황제들만 내 마음에 원하는 바와 하나님께 구하는 바는 이스라엘을 위함이니 곧 그들로 구원을 받게 함이라</p>
-          <p>2절. 내가 증언하노니 그들이 하나님께 열심이 있으나 올바른 지식을 따른 것이 아니니라</p>
-          <p>3절. 하나님의 의를 모르고 자기 의를 세우려고 힘써 하나님의 의에 복종하지 아니하였느니라</p>
-          <p>4절. 그리스도는 모든 믿는 자에게 의를 이루기 위하여 율법의 마침이 되시니라</p>
+      {sermon.scriptureText && (
+        <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-bold text-gray-800">
+            {sermon.scripture}
+          </h2>
+          <div className="whitespace-pre-line text-lg font-semibold text-gray-700">
+            {sermon.scriptureText}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Share buttons */}
       <div className="mt-8">

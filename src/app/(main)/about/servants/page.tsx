@@ -7,8 +7,8 @@ export default function ServantsPage() {
       ["김성민", "전도사", "GIMSEONGMIN.png"]
     ],
     "시무장로": [
-      ["김영대", "목사", "GIMYEONGDAE.png"],
-      ["박성수", "목사", "sspark.png"]
+      ["김영대", "장로", "GIMYEONGDAE.png"],
+      ["박성수", "장로", "sspark.png"]
     ],
     "원로장로": [
       ["최이성", "원로장로", "CHOEISEONG.png"],
